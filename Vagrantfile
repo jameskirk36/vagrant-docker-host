@@ -6,6 +6,7 @@ Vagrant.configure("2") do |config|
 
   # networking 
   config.vm.hostname = "docker-host"
+  config.vm.network "forwarded_port" ,guest: 32768, host: 32768
 
   # provisioning
   config.vm.provision :shell, path: "bootstrap.sh"
