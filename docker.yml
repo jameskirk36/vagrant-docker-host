@@ -1,4 +1,3 @@
-- hosts: localhost
+- hosts: local
   roles:
-    - amidos.install-docker
-    - dav1d8.docker-compose
+   - amidos.install-docker

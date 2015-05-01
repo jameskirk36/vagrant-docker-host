@@ -1,13 +1,28 @@
 #!/usr/bin/env bash
 
-apt-get update
-apt-get install -y ansible
+function main(){
+  sudo apt-get update
+  sudo apt-get install -y ansible
+  
+  sudo ansible-galaxy install amidos.install-docker
 
-ansible-galaxy install amidos.install-docker
-ansible-galaxy install dav1d8.docker-compose
+  cp -f /vagrant/ansible.cfg /home/vagrant/.ansible.cfg
+  
+  sudo rm -f /etc/ansible/hosts
+  sudo sh -c 'echo "[local]" >> /etc/ansible/hosts;echo "localhost" >> /etc/ansible/hosts'
+  
+  cp -f /vagrant/.vagrant/machines/default/virtualbox/private_key /home/vagrant/.ssh/vagrant_private_key
+  chmod 600 /home/vagrant/.ssh/vagrant_private_key
+  
+  ansible-playbook /vagrant/docker.yml --private-key=/home/vagrant/.ssh/vagrant_private_key
+  #smoke test!
+  docker --version
+}
 
-if [ ! -f /etc/ansible/hosts ]; then
-    echo '[local]\nlocalhost' > /etc/ansible/hosts
+uid=$(id -u)
+if [ $uid -eq 0 ]; then
+  echo "Switching to user: vagrant"
+  sudo -u vagrant -i $0 "$@"  
+else
+  main
 fi
-
-ansible-playbook /vagrant/docker.yml
