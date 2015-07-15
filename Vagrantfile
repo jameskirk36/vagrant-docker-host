@@ -15,4 +15,5 @@ Vagrant.configure("2") do |config|
 
   # provisioning
   config.vm.provision :shell, path: "bootstrap.sh"
+  config.vm.synced_folder "C:/src", "/home/vagrant/src"
 end
